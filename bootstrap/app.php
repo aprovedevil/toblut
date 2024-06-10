@@ -16,6 +16,12 @@ return Application::configure(basePath: dirname(__DIR__))
             \Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class,
         ]);
 
+        $middleware->alias([
+            'admin' => \App\Http\Middleware\Admin::class,
+            'siswa' => \App\Http\Middleware\Siswa::class,
+            'guru' => \App\Http\Middleware\Guru::class,
+            'redirectusertype' => \App\Http\Middleware\Redirectusertype::class,
+        ]);
         //
     })
     ->withExceptions(function (Exceptions $exceptions) {

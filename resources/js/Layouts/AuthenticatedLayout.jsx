@@ -5,8 +5,45 @@ import NavLink from '@/Components/NavLink';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { Link } from '@inertiajs/react';
 
+const navLinks = {
+    user: [
+        { route: 'dashboard', label: 'User Dashboard' },
+        { route: 'user.pendaftaran', label: 'PPDB' }
+    ],
+    admin: [
+        { route: 'admin.dashboard', label: 'Admin Dashboard' },
+        { route: 'roles.index', label: 'Roles' }
+    ],
+    siswa: [
+        { route: 'siswa.dashboard', label: 'Siswa Dashboard' },
+        { route: 'siswa.nilai', label: 'Nilai Siswa'},
+        { route: 'siswa.materi', label: 'Materi Siswa'}
+    ],
+    guru: [
+        { route: 'guru.dashboard', label: 'Guru Dashboard' },
+        { route: 'guru.Manajemen', label: 'Manajemen Nilai' },
+        { route: 'guru.materi', label: 'Materi Guru'}
+    ]
+};
+
 export default function Authenticated({ user, header, children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
+
+    const renderNavLinks = (type) => {
+        return navLinks[type]?.map(link => (
+            <NavLink key={link.route} href={route(link.route)} active={route().current(link.route)}>
+                {link.label}
+            </NavLink>
+        ));
+    };
+
+    const renderResponsiveNavLinks = (type) => {
+        return navLinks[type]?.map(link => (
+            <ResponsiveNavLink key={link.route} href={route(link.route)} active={route().current(link.route)}>
+                {link.label}
+            </ResponsiveNavLink>
+        ));
+    };
 
     return (
         <div className="min-h-screen bg-gray-100">
@@ -20,15 +57,13 @@ export default function Authenticated({ user, header, children }) {
                                 </Link>
                             </div>
 
-                            <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink href={route('dashboard')} active={route().current('dashboard')}>
-                                    Dashboard
-                                </NavLink>
+                            <div className="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                {renderNavLinks(user.usertype)}
                             </div>
                         </div>
 
-                        <div className="hidden sm:flex sm:items-center sm:ms-6">
-                            <div className="ms-3 relative">
+                        <div className="hidden sm:flex sm:items-center sm:ml-6">
+                            <div className="ml-3 relative">
                                 <Dropdown>
                                     <Dropdown.Trigger>
                                         <span className="inline-flex rounded-md">
@@ -37,9 +72,8 @@ export default function Authenticated({ user, header, children }) {
                                                 className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150"
                                             >
                                                 {user.name}
-
                                                 <svg
-                                                    className="ms-2 -me-0.5 h-4 w-4"
+                                                    className="ml-2 -mr-0.5 h-4 w-4"
                                                     xmlns="http://www.w3.org/2000/svg"
                                                     viewBox="0 0 20 20"
                                                     fill="currentColor"
@@ -64,9 +98,9 @@ export default function Authenticated({ user, header, children }) {
                             </div>
                         </div>
 
-                        <div className="-me-2 flex items-center sm:hidden">
+                        <div className="-mr-2 flex items-center sm:hidden">
                             <button
-                                onClick={() => setShowingNavigationDropdown((previousState) => !previousState)}
+                                onClick={() => setShowingNavigationDropdown(prevState => !prevState)}
                                 className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out"
                             >
                                 <svg className="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
@@ -92,9 +126,7 @@ export default function Authenticated({ user, header, children }) {
 
                 <div className={(showingNavigationDropdown ? 'block' : 'hidden') + ' sm:hidden'}>
                     <div className="pt-2 pb-3 space-y-1">
-                        <ResponsiveNavLink href={route('dashboard')} active={route().current('dashboard')}>
-                            Dashboard
-                        </ResponsiveNavLink>
+                        {renderResponsiveNavLinks(user.usertype)}
                     </div>
 
                     <div className="pt-4 pb-1 border-t border-gray-200">

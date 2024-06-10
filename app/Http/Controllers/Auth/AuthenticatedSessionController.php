@@ -15,6 +15,8 @@ class AuthenticatedSessionController extends Controller
 {
     /**
      * Display the login view.
+     *
+     * @return Response
      */
     public function create(): Response
     {
@@ -26,27 +28,40 @@ class AuthenticatedSessionController extends Controller
 
     /**
      * Handle an incoming authentication request.
+     *
+     * @param  LoginRequest $request
+     * @return RedirectResponse
      */
     public function store(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
-
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        $user = $request->user();
+
+        if ($user->usertype === 'admin') {
+            return redirect(route('admin.dashboard'));
+        } elseif ($user->usertype === 'siswa') {
+            return redirect(route('siswa.dashboard'));
+        } elseif ($user->usertype === 'user') {
+            return redirect()->intended(route('dashboard'));
+        } else {
+            Auth::logout();  // Ensure we log out users with unrecognized types
+            return redirect('/login')->withErrors(['usertype' => 'Your user type is not recognized.']);
+        }
     }
 
     /**
      * Destroy an authenticated session.
+     *
+     * @param  Request $request
+     * @return RedirectResponse
      */
     public function destroy(Request $request): RedirectResponse
     {
         Auth::guard('web')->logout();
-
         $request->session()->invalidate();
-
         $request->session()->regenerateToken();
-
         return redirect('/');
     }
 }
