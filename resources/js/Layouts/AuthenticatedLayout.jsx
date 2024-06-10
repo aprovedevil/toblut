@@ -21,7 +21,7 @@ const navLinks = {
     ],
     guru: [
         { route: 'guru.dashboard', label: 'Guru Dashboard' },
-        { route: 'guru.Manajemen', label: 'Manajemen Nilai' },
+        { route: 'guru.manajemen', label: 'Manajemen Nilai' },
         { route: 'guru.materi', label: 'Materi Guru'}
     ]
 };
